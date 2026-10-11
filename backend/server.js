@@ -7,7 +7,19 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 4000
 
-app.use(cors())
+// 1. Configuración explícita de CORS (Soportando preflight OPTIONS)
+const corsOptions = {
+    origin: '*', // O la URL de tu frontend de Vercel
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}
+
+app.use(cors(corsOptions))
+
+// Responder explícitamente a las peticiones PREFLIGHT (OPTIONS)
+app.options('*', cors(corsOptions))
+
 app.use(express.json())
 
 app.get('/', (req, res) => {
