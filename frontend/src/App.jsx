@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api'
+const BASE = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/$/, '') : 'http://localhost:4000'
+const API_URL = `${BASE}/api`
 
 export default function App() {
   const [data, setData] = useState(null)
@@ -19,7 +20,7 @@ export default function App() {
       // Verificamos si la respuesta HTTP no fue ok (ej. status 400, 404, 500)
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error?.message || `Error HTTP: ${response.status}`)
+        throw new Error(errorData.error?.message || errorData.message || `Error HTTP: ${response.status}`)
       }
 
       const result = await response.json()
