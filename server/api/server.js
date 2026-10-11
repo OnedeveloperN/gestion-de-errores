@@ -60,6 +60,14 @@ app.use((err, req, res, next) => {
     })
 })
 
+app.get('/', (req, res) => {
+    res.json({ message: 'API de Express funcionando correctamente' });
+  });
+  
+  app.get('/api', (req, res) => {
+    res.json({ message: 'Ruta API activa' });
+  });
+
 app.listen(PORT, () => {
     console.log(`Servidor ejecutándose en http://localhost:${PORT}`)
 })
