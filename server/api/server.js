@@ -10,10 +10,20 @@ const PORT = process.env.PORT || 4000
 app.use(cors())
 app.use(express.json())
 
-// Ejemplo de Endpoint con try/catch explícito
+app.get('/', (req, res) => {
+    res.json({
+        success: true,
+        message: 'API Express funcionando correctamente en Vercel'
+    })
+})
+
+app.get('/api', (req, res) => {
+    res.json({ status: 'ok' })
+})
+
+// Endpoint con try/catch explícito
 app.get('/api/data', async (req, res, next) => {
     try {
-        // Simulación de búsqueda o lógica de negocio
         const data = { id: 1, mensaje: 'Datos obtenidos correctamente' }
 
         if (!data) {
@@ -24,7 +34,6 @@ app.get('/api/data', async (req, res, next) => {
 
         res.json(data)
     } catch (error) {
-        // Pasamos el error al middleware global
         next(error)
     }
 })
@@ -46,7 +55,7 @@ app.use((req, res, next) => {
     })
 })
 
-// Middleware Global de Manejo de Errores (Express)
+// Middleware Global de Manejo de Errores 
 app.use((err, req, res, next) => {
     console.error(`[SERVER ERROR]: ${err.message}`)
     const statusCode = err.status || 500
@@ -60,16 +69,10 @@ app.use((err, req, res, next) => {
     })
 })
 
-app.get('/', (req, res) => {
-    res.json({ message: 'API de Express funcionando correctamente' });
-  });
-  
-  app.get('/api', (req, res) => {
-    res.json({ message: 'Ruta API activa' });
-  });
-
-app.listen(PORT, () => {
-    console.log(`Servidor ejecutándose en http://localhost:${PORT}`)
-})
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Servidor ejecutándose en http://localhost:${PORT}`)
+    })
+}
 
 export default app
